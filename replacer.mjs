@@ -24,7 +24,6 @@ async function doProcess(filename) {
   const filepath = path.resolve(process.cwd(), filename);
   let content = await readFile(filepath, 'utf8');
 
-  // console.log(filename);
   const regxp = /(href|src)=(\"|\')\/(.*)(\"|\')/g;
 
   content = content.replace(regxp, '$1=$2$3$4');
@@ -34,15 +33,16 @@ async function doProcess(filename) {
   let baseTag = $('base');
   if (baseTag.length) {
     baseTag[0].attribs.href = '/online-tools/';
-    console.log($.html())
   } else {
     $('head').prepend($('<base href="/online-tools/">'))
   }
 
-  let badScript = $('script:not([src])');
+  let badScript = $('head script:not([src])');
   if (badScript.length) {
     badScript.remove()
   }
 
-  writeFile(filepath, 'utf8', $.html());
+  let htmlout = $.html();
+
+  writeFile(filepath, htmlout);
 }
